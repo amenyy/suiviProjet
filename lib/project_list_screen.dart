@@ -240,10 +240,12 @@ class _ProjectListState extends State<ProjectList> {
             top: 0,
             left: 0,
             right: 0,
-            child: Image.asset('lib/images/bg.png',
-                fit: BoxFit.cover,
-                height: MediaQuery.of(context).size.height * 0.34,
-                width: double.infinity),
+            child: Image.asset(
+              'lib/images/bg.png',
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height * 0.34,
+              width: double.infinity,
+            ),
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.1,
@@ -251,50 +253,68 @@ class _ProjectListState extends State<ProjectList> {
             right: 20,
             child: FloatingActionButton(
               onPressed: _showAddProjectDialog,
-              backgroundColor: Color.fromARGB(255, 45, 3, 61), // Couleur rouge
+              backgroundColor: Color.fromARGB(255, 45, 3, 61),
               child: Icon(Icons.add),
             ),
           ),
 
-          // Add the search bar
+// Add the search bar
           Positioned(
-            top: MediaQuery.of(context).size.height * 0.2,
+            top: MediaQuery.of(context).size.height * 0.14,
             left: 20,
             right: 20,
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    blurRadius: 2,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  SizedBox(width: 10),
-                  Icon(Icons.search, color: Colors.grey[600]),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search projects...',
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value;
-                        });
-                        fetchProjects(); // Update project list when search query changes
-                      },
+            child: Column(
+              children: [
+                // Add the title
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 3000),
+                  opacity: _searchQuery.isNotEmpty ? 0 : 1,
+                  child: Text(
+                    'Project tracking',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        blurRadius: 2,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 10),
+                      Icon(Icons.search, color: Colors.grey[600]),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search projects...',
+                            border: InputBorder.none,
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchQuery = value;
+                            });
+                            fetchProjects(); // Update project list when search query changes
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
 
