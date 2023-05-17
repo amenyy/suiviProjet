@@ -176,11 +176,25 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 fit: BoxFit.cover,
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 1.0, right: 6.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: ElevatedButton.icon(
+                          onPressed: _saveProject, // Save the project
+                          icon: Icon(Icons.save),
+                          label: Text('Project'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Color(0xFF9B51E0),
+                          ),
+                        ),
+                      ),
+                    ),
                     Text(
                       widget.project.name,
                       style: TextStyle(
@@ -245,6 +259,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     },
                     icon: Icon(Icons.add),
                     label: Text('User'),
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(87, 155, 81, 224),
+                    ),
                   ),
                 ),
               ),
@@ -270,16 +287,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
               SizedBox(height: 5),
               Text(
-                widget.project.description,
+                widget.project.description ?? "no description to show ",
                 style: TextStyle(
                   fontSize: 16,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: _saveProject, // Save the project
-                  child: Text('Save Project'),
                 ),
               ),
               Card(
