@@ -248,7 +248,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                       child: Text('Add Users'),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  /*  SizedBox(height: 16),
                   Text(
                     'Selected Users:',
                     style: TextStyle(
@@ -276,7 +276,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                           ),
-                        ),
+                        ),*/
                 ],
               ),
             ),
