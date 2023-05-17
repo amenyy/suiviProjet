@@ -103,15 +103,24 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       final jsonData = jsonDecode(response.body);
 
       // Retrieve the existing users, sprints, and tasks
-      final existingUsers = (jsonData['users'] as List)
-          .map((userJson) => User.fromJson(userJson))
-          .toList();
-      final existingSprints = (jsonData['sprints'] as List)
-          .map((sprintJson) => Sprint.fromJson(sprintJson))
-          .toList();
-      final existingTasks = (jsonData['taches'] as List)
-          .map((taskJson) => Task.fromJson(taskJson))
-          .toList();
+      final existingUsers = (jsonData['users'] as List<dynamic>)
+              ?.map((userJson) => User.fromJson(userJson))
+              ?.toList() ??
+          [];
+
+      final existingSprints =
+          (jsonData['sprints'] != null && jsonData['sprints'] is List<dynamic>)
+              ? (jsonData['sprints'] as List<dynamic>)
+                  .map((sprintJson) => Sprint.fromJson(sprintJson))
+                  .toList()
+              : [];
+
+      final existingTasks =
+          (jsonData['taches'] != null && jsonData['taches'] is List<dynamic>)
+              ? (jsonData['taches'] as List<dynamic>)
+                  .map((taskJson) => Task.fromJson(taskJson))
+                  .toList()
+              : [];
 
       // Create a new list of users with the selected users added
       final List<Map<String, dynamic>> updatedUsers = [
