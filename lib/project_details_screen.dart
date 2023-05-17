@@ -1,11 +1,148 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:suiviprojet/BacklogButton.dart';
 import 'package:suiviprojet/Project.dart';
+import 'package:suiviprojet/Sprint.dart';
+import 'package:suiviprojet/Task.dart';
+import 'package:suiviprojet/User.dart';
+import 'package:suiviprojet/UserService.dart';
 
-class ProjectDetailsScreen extends StatelessWidget {
+class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
 
   ProjectDetailsScreen(this.project);
+
+  @override
+  _ProjectDetailsScreenState createState() => _ProjectDetailsScreenState();
+}
+
+class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
+  final _userService = UserService();
+  List<User> _selectedUsers = [];
+  List<User> _globalUsers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGlobalUsers();
+  }
+
+  Future<void> _loadGlobalUsers() async {
+    try {
+      final users = await _userService.fetchUsers();
+      setState(() {
+        _globalUsers = users;
+      });
+    } catch (e) {
+      print('Failed to load global users: $e');
+    }
+  }
+
+  void _addUserToProject(User user) {
+    setState(() {
+      _selectedUsers.add(user);
+    });
+  }
+
+  void _removeUserFromProject(User user) {
+    setState(() {
+      _selectedUsers.remove(user);
+    });
+  }
+
+  void _openUserSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Users'),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _globalUsers.length,
+              itemBuilder: (BuildContext context, int index) {
+                final user = _globalUsers[index];
+                final isSelected = _selectedUsers.contains(user);
+
+                return ListTile(
+                  title: Text('${user.firstName} ${user.lastName}'),
+                  trailing: IconButton(
+                    icon: Icon(isSelected
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank),
+                    onPressed: () {
+                      if (isSelected) {
+                        _removeUserFromProject(user);
+                      } else {
+                        _addUserToProject(user);
+                      }
+                      Navigator.pop(context); // Close the dialog
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _saveProject() async {
+    // Retrieve the existing project data
+    final response = await http.get(
+        Uri.parse('http://192.168.1.27:3000/projects/${widget.project.id}'));
+
+    if (response.statusCode == 200) {
+      // Parse the response body
+      final jsonData = jsonDecode(response.body);
+
+      // Retrieve the existing users, sprints, and tasks
+      final existingUsers = (jsonData['users'] as List)
+          .map((userJson) => User.fromJson(userJson))
+          .toList();
+      final existingSprints = (jsonData['sprints'] as List)
+          .map((sprintJson) => Sprint.fromJson(sprintJson))
+          .toList();
+      final existingTasks = (jsonData['taches'] as List)
+          .map((taskJson) => Task.fromJson(taskJson))
+          .toList();
+
+      // Create a new list of user IDs with the selected users added
+      final List<String> updatedUserIds = [
+        ...existingUsers.map((user) => user.id),
+        ..._selectedUsers.map((user) => user.id),
+      ];
+
+      // Update the project with the new user IDs
+      final updatedProjectData = {
+        ...jsonData,
+        'users': updatedUserIds,
+        // Add other properties as needed
+      };
+
+      // Send the updated project data to the JSON server
+      final putResponse = await http.put(
+        Uri.parse('http://192.168.1.27:3000/projects/${widget.project.id}'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updatedProjectData),
+      );
+
+      if (putResponse.statusCode == 200) {
+        // Project updated successfully
+        print('Project updated');
+      } else {
+        // Failed to update project
+        print('Failed to update project');
+      }
+    } else {
+      // Failed to retrieve project data
+      print('Failed to retrieve project data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +166,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        project.name,
+                        widget.project.name,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 28,
@@ -43,7 +180,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                               color: Colors.white, size: 16),
                           SizedBox(width: 4),
                           Text(
-                            'Created on: ${project.createdAt}',
+                            'Created on: ${widget.project.createdAt}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -57,7 +194,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                           Icon(Icons.person, color: Colors.white, size: 16),
                           SizedBox(width: 4),
                           Text(
-                            'Users: ${project.users.map((user) => '${user.firstName} ${user.lastName}').join(", ")}',
+                            'Users: ${widget.project.users.map((user) => '${user.firstName} ${user.lastName}').join(", ")}',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 14,
@@ -86,21 +223,58 @@ class ProjectDetailsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    project.description,
+                    widget.project.description,
                     style: TextStyle(
                       fontSize: 16,
                     ),
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 50.0),
-                    child: BacklogButton(
+                    child: ElevatedButton(
                       onPressed: () {
-                        // do something when button is pressed
+                        _openUserSelectionDialog(); // Open the user selection dialog
                       },
+                      child: Text('Add Users'),
                     ),
-                  )
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Selected Users:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  _selectedUsers.isNotEmpty
+                      ? Column(
+                          children: _selectedUsers.map((user) {
+                            return ListTile(
+                              title: Text('${user.firstName} ${user.lastName}'),
+                              trailing: IconButton(
+                                icon: Icon(Icons.remove_circle),
+                                onPressed: () {
+                                  _removeUserFromProject(user);
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        )
+                      : Text(
+                          'No users selected.',
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
                 ],
               ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ElevatedButton(
+              onPressed: _saveProject, // Save the project
+              child: Text('Save Project'),
             ),
           ),
         ],

@@ -183,7 +183,7 @@ class _ProjectListState extends State<ProjectList> {
   }
 
   void fetchProjects() async {
-    var url = 'http://192.168.1.21:3000/projects';
+    var url = 'http://192.168.1.27:3000/projects';
     try {
       var response = await http.get(Uri.parse(url));
       var responseData = jsonDecode(response.body);
