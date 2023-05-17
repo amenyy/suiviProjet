@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:suiviprojet/BacklogButton.dart';
@@ -111,16 +113,18 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           .map((taskJson) => Task.fromJson(taskJson))
           .toList();
 
-      // Create a new list of user IDs with the selected users added
-      final List<String> updatedUserIds = [
-        ...existingUsers.map((user) => user.id),
-        ..._selectedUsers.map((user) => user.id),
+      // Create a new list of users with the selected users added
+      final List<Map<String, dynamic>> updatedUsers = [
+        ...existingUsers
+            .map((user) => user.toJson()), // Convert existing users to JSON
+        ..._selectedUsers
+            .map((user) => user.toJson()), // Convert selected users to
       ];
 
-      // Update the project with the new user IDs
+      // Update the project with the new user IDs and users list
       final updatedProjectData = {
         ...jsonData,
-        'users': updatedUserIds,
+        'users': updatedUsers,
         // Add other properties as needed
       };
 

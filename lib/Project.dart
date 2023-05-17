@@ -1,3 +1,5 @@
+import 'package:suiviprojet/Sprint.dart';
+import 'package:suiviprojet/Task.dart';
 import 'package:suiviprojet/User.dart';
 
 class Project {
@@ -6,6 +8,8 @@ class Project {
   String description;
   DateTime createdAt;
   List<User> users;
+  List<Sprint> sprints;
+  List<Task> tasks;
 
   Project({
     required this.id,
@@ -13,6 +17,8 @@ class Project {
     required this.description,
     required this.createdAt,
     required this.users,
+    required this.sprints,
+    required this.tasks,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,11 +28,15 @@ class Project {
       'description': description,
       'createdAt': createdAt.toIso8601String(),
       'users': users.map((user) => user.toJson()).toList(),
+      'sprints': sprints.map((sprint) => sprint.toJson()).toList(),
+      'tasks': tasks.map((task) => task.toJson()).toList(),
     };
   }
 
   factory Project.fromJson(Map<String, dynamic> json) {
     List<User> users = [];
+    List<Sprint> sprints = [];
+    List<Task> tasks = [];
 
     if (json['users'] != null && json['users'] is List<dynamic>) {
       users = (json['users'] as List<dynamic>).map((userJson) {
@@ -37,6 +47,27 @@ class Project {
         }
       }).toList();
     }
+
+    if (json['sprints'] != null && json['sprints'] is List<dynamic>) {
+      sprints = (json['sprints'] as List<dynamic>).map((sprintJson) {
+        if (sprintJson is Map<String, dynamic>) {
+          return Sprint.fromJson(sprintJson);
+        } else {
+          throw Exception('Invalid sprint format: $sprintJson');
+        }
+      }).toList();
+    }
+
+    if (json['taches'] != null && json['taches'] is List<dynamic>) {
+      tasks = (json['taches'] as List<dynamic>).map((taskJson) {
+        if (taskJson is Map<String, dynamic>) {
+          return Task.fromJson(taskJson);
+        } else {
+          throw Exception('Invalid task format: $taskJson');
+        }
+      }).toList();
+    }
+
     DateTime? createdAt = DateTime.tryParse(json['createdAt'] ?? '');
 
     return Project(
@@ -45,6 +76,8 @@ class Project {
       description: json['description'],
       createdAt: createdAt ?? DateTime.now(),
       users: users,
+      sprints: sprints,
+      tasks: tasks,
     );
   }
 }

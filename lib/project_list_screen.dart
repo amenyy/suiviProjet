@@ -112,7 +112,9 @@ class _ProjectListState extends State<ProjectList> {
         description: description,
         createdAt: DateTime.now(),
         //users: users,
-        users: []);
+        users: [],
+        sprints: [],
+        tasks: []);
 
     try {
       await _projectService.addProject(project);

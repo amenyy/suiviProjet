@@ -22,6 +22,8 @@ class ProjectService {
                 users: (p['users'] as List<dynamic>)
                     .map((userJson) => User.fromJson(userJson))
                     .toList(),
+                sprints: [], // Provide an empty list or update with actual data
+                tasks: [], // Provide an empty list or update with actual data
               ))
           .toList();
     } else {

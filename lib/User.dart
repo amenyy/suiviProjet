@@ -1,32 +1,35 @@
 class User {
+  int id;
   String firstName;
   String lastName;
-  String id;
-  //String image; // New property for user image
+  String image;
+  String email;
 
-  User({required this.firstName, required this.lastName, required this.id
-      // required this.image, // Include the image property in the constructor
-      });
+  User({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.image,
+    required this.email,
+  });
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'firstName': firstName,
       'lastName': lastName,
-      'id': id
-      // 'image': image,
+      'image': image,
+      'email': email,
     };
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    String firstname = json['firstName'] ?? '';
-    String lastname = json['lastName'] ?? '';
-    String id = json['id'].toString();
-
     return User(
-      firstName: firstname,
-      lastName: lastname,
-      id: id,
-      //image: image, // Pass the image property to the constructor
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      image: json['image'],
+      email: json['email'],
     );
   }
 }
