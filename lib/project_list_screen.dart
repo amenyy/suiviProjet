@@ -16,7 +16,8 @@ class CurvedListItem extends StatelessWidget {
     required this.time,
     required this.color,
     required this.nextColor,
-    required this.onTap, // add this line to define the named parameter
+    required this.onTap,
+    required this.onDelete,
   });
 
   final Widget title;
@@ -25,6 +26,7 @@ class CurvedListItem extends StatelessWidget {
   final Color color;
   final Color nextColor;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,11 @@ class CurvedListItem extends StatelessWidget {
                     title,
                     subtitle,
                   ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  color: Colors.white,
+                  onPressed: onDelete,
                 ),
               ],
             ),
@@ -143,6 +150,22 @@ class _ProjectListState extends State<ProjectList> {
     }
   }
 
+//deleteproj
+  void _deleteProject(int projectId) async {
+    try {
+      await _projectService.deleteProject(projectId);
+      setState(() {
+        projects.removeWhere((project) => project['id'] == projectId);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Project deleted successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete project')),
+      );
+    }
+  }
 //show add boxe
 
   void _showAddProjectDialog() {
@@ -299,6 +322,9 @@ class _ProjectListState extends State<ProjectList> {
                           builder: (context) => ProjectDetailsScreen(project),
                         ),
                       );
+                    },
+                    onDelete: () {
+                      _deleteProject(project.id);
                     },
                   );
                 },

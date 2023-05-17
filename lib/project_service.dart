@@ -52,4 +52,16 @@ class ProjectService {
       throw Exception('Failed to add project');
     }
   }
+
+  Future<void> deleteProject(int projectId) async {
+    final url = '$API_URL/$projectId';
+
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // Project deleted successfully
+    } else {
+      throw Exception('Failed to delete project');
+    }
+  }
 }

@@ -195,47 +195,11 @@
       ]
     },
     {
-      "id": 79,
-      "name": "peojet 3",
-      "description": "desc",
-      "createdAt": "2023-05-17T09:33:19.224252",
-      "users": [
-        {
-          "id": 6,
-          "firstName": "Ameny",
-          "lastName": "Ameny",
-          "image": "user1.svg",
-          "email": "alice@example.com"
-        },
-        {
-          "id": 7,
-          "firstName": "Ranya",
-          "lastName": "Ranya",
-          "image": "user2.svg",
-          "email": "bob@example.com"
-        },
-        {
-          "id": 9,
-          "firstName": "Alaa",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob2@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
-        }
-      ]
+      "id": 84,
+      "name": "suivi projet",
+      "description": "application de suivi des projet ",
+      "createdAt": "2023-05-17T12:49:02.019338",
+      "users": []
     }
   ],
   "users": [
