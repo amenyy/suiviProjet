@@ -193,19 +193,26 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                         ],
                       ),
                       SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(Icons.person, color: Colors.white, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Users: ${widget.project.users.map((user) => '${user.firstName} ${user.lastName}').join(", ")}',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 14,
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.person,
+                                    color: Colors.white, size: 16),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Users: ${widget.project.users.map((user) => '${user.firstName}').join(", ")}',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
