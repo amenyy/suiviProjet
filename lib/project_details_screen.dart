@@ -163,104 +163,204 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            child: Stack(
-              children: [
-                Image.asset(
-                  'lib/images/avatar.png',
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.project.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
+        body: Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: Stack(
+            children: [
+              Image.asset(
+                'lib/images/avatar.png',
+                height: double.infinity,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.project.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 8),
-                      Row(
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.calendar_today,
+                            color: Colors.white, size: 16),
+                        SizedBox(width: 4),
+                        Text(
+                          'Created on: ${widget.project.createdAt}',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    SingleChildScrollView(
+                      child: Column(
                         children: [
-                          Icon(Icons.calendar_today,
-                              color: Colors.white, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Created on: ${widget.project.createdAt}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
+                          Row(
+                            children: [
+                              Icon(Icons.person, color: Colors.white, size: 16),
+                              SizedBox(width: 4),
+                              Text(
+                                'Users: ${widget.project.users.map((user) => '${user.firstName}').join(", ")}',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
-                      SingleChildScrollView(
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                margin: const EdgeInsets.only(top: 10.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      _openUserSelectionDialog(); // Ouvrir la boîte de dialogue de sélection d'utilisateur
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('User'),
+                  ),
+                ),
+              ),
+              Card(
+                color: Colors.transparent,
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Color(
+                        0xFF9B51E0), // Utilisez la couleur lavande de votre choix
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Description',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                widget.project.description,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  onPressed: _saveProject, // Save the project
+                  child: Text('Save Project'),
+                ),
+              ),
+              Card(
+                color: Colors.transparent,
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    color: Color(
+                        0xFF9B51E0), // Utilisez la couleur lavande de votre choix
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Backlog Project',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Card(
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Icon(Icons.person,
-                                    color: Colors.white, size: 16),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Users: ${widget.project.users.map((user) => '${user.firstName}').join(", ")}',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                            ListTile(
+                              title: Text('Task List'),
+                              trailing: IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  // Handle adding a new task
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: widget.project.tasks.length,
+                                itemBuilder: (context, index) {
+                                  Task task = widget.project.tasks[index];
+                                  return ListTile(
+                                    title: Text(task.name),
+                                    subtitle: Text(task.description),
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Description',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    widget.project.description,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 50.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _openUserSelectionDialog(); // Open the user selection dialog
-                      },
-                      child: Text('Add Users'),
-                    ),
-                  ),
-                  /*  SizedBox(height: 16),
+                    Expanded(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              title: Text('Sprint List'),
+                              trailing: IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () {
+                                  // Handle adding a new sprint
+                                },
+                              ),
+                            ),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: widget.project.sprints.length,
+                                itemBuilder: (context, index) {
+                                  Sprint sprint = widget.project.sprints[index];
+                                  return ListTile(
+                                    title: Text(sprint.name),
+                                    subtitle: Text(sprint.endDate.toString()),
+                                  );
+                                },
+                              ),
+                            ),
+
+                            /*  SizedBox(height: 16),
                   Text(
                     'Selected Users:',
                     style: TextStyle(
@@ -289,19 +389,17 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                             fontStyle: FontStyle.italic,
                           ),
                         ),*/
-                ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ]),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ElevatedButton(
-              onPressed: _saveProject, // Save the project
-              child: Text('Save Project'),
-            ),
-          ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ));
   }
 }
