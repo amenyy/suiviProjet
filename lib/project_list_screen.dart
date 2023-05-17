@@ -56,27 +56,46 @@ class CurvedListItem extends StatelessWidget {
                 const SizedBox(
                   width: 16,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      time,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    title,
-                    subtitle,
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  color: Colors.white,
-                  onPressed: onDelete,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        time,
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                      const SizedBox(
+                        height: 2,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: title,
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                color: Colors.white,
+                                onPressed: onEdit,
+                              ),
+                              SizedBox(width: 8.0),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                color: Colors.white,
+                                onPressed: onDelete,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      subtitle,
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -84,6 +103,8 @@ class CurvedListItem extends StatelessWidget {
           // onTap: onTap,
         ));
   }
+
+  void onEdit() {}
 }
 
 class ProjectList extends StatefulWidget {
