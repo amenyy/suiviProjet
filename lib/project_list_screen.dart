@@ -86,6 +86,8 @@ class ProjectList extends StatefulWidget {
 
 class _ProjectListState extends State<ProjectList> {
   List<dynamic> projects = [];
+  String _searchQuery = '';
+
   final _projectService = ProjectService();
   final _projectNameController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -169,6 +171,7 @@ class _ProjectListState extends State<ProjectList> {
               onPressed: () {
                 _addProject();
                 Navigator.of(context).pop();
+                fetchProjects(); // Update project list after adding a project
               },
               child: Text('Add'),
             ),
@@ -185,7 +188,8 @@ class _ProjectListState extends State<ProjectList> {
   }
 
   void fetchProjects() async {
-    var url = 'http://192.168.1.27:3000/projects';
+    var url = 'http://192.168.1.27:3000/projects?q=$_searchQuery';
+
     try {
       var response = await http.get(Uri.parse(url));
       var responseData = jsonDecode(response.body);
@@ -258,6 +262,12 @@ class _ProjectListState extends State<ProjectList> {
                         hintText: 'Search projects...',
                         border: InputBorder.none,
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                        fetchProjects(); // Update project list when search query changes
+                      },
                     ),
                   ),
                 ],

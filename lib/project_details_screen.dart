@@ -24,6 +24,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final _userService = UserService();
   List<User> _selectedUsers = [];
   List<User> _globalUsers = [];
+  List<User> _projectUsers = [];
 
   @override
   void initState() {
@@ -129,7 +130,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         ..._selectedUsers
             .map((user) => user.toJson()), // Convert selected users to
       ];
-
+      setState(() {
+        _projectUsers = updatedUsers.cast<User>();
+      });
       // Update the project with the new user IDs and users list
       final updatedProjectData = {
         ...jsonData,
