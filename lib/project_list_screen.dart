@@ -78,11 +78,11 @@ class CurvedListItem extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              IconButton(
+                              /*  IconButton(
                                 icon: Icon(Icons.edit),
                                 color: Colors.white,
                                 onPressed: onEdit,
-                              ),
+                              ),*/
                               SizedBox(width: 8.0),
                               IconButton(
                                 icon: Icon(Icons.delete),
@@ -162,7 +162,10 @@ class _ProjectListState extends State<ProjectList> {
         projects.add(map);
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Project added successfully')),
+        SnackBar(
+          content: Text('Project added successfully'),
+          backgroundColor: Colors.green, // Set the background color to green
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -179,7 +182,10 @@ class _ProjectListState extends State<ProjectList> {
         projects.removeWhere((project) => project['id'] == projectId);
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Project deleted successfully')),
+        SnackBar(
+          content: Text('Project deleted successfully'),
+          backgroundColor: Colors.red, // Set the background color to green
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -288,7 +294,7 @@ class _ProjectListState extends State<ProjectList> {
               children: [
                 // Add the title
                 AnimatedOpacity(
-                  duration: Duration(milliseconds: 3000),
+                  duration: Duration(milliseconds: 1500),
                   opacity: _searchQuery.isNotEmpty ? 0 : 1,
                   child: Text(
                     'Project tracking',
