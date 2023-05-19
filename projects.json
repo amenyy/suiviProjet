@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Projet 1",
       "description": "Description du projet 1",
-      "createdAt": "2023-05-19T15:20:37.014",
+      "createdAt": "2023-05-19T18:41:45.418",
       "sprints": [
         {
           "id": 2,
@@ -24,7 +24,7 @@
             {
               "user": null,
               "id": 4,
-              "name": null,
+              "name": "tache",
               "description": "Description de la tache 4",
               "isCompleted": "TaskStatus.pending"
             }
@@ -68,22 +68,69 @@
           "lastName": "Johnson",
           "image": "user2.svg",
           "email": "bob2@example.com"
+        },
+        {
+          "id": 6,
+          "firstName": "Ameny",
+          "lastName": "Ameny",
+          "image": "user1.svg",
+          "email": "alice@example.com"
+        },
+        {
+          "id": 7,
+          "firstName": "Ranya",
+          "lastName": "Ranya",
+          "image": "user2.svg",
+          "email": "bob@example.com"
         }
       ],
       "tasks": [
         {
-          "user": null,
-          "id": 5,
-          "name": null,
-          "description": "Description de la tache 3",
-          "isCompleted": "TaskStatus.pending"
+          "user": {
+            "id": 9,
+            "firstName": "Alaa",
+            "lastName": "Johnson",
+            "image": "user2.svg",
+            "email": "bob2@example.com"
+          },
+          "id": 1,
+          "name": "eya",
+          "description": "eya",
+          "isCompleted": "done"
+        },
+        {
+          "user": {
+            "id": 7,
+            "firstName": "Ranya",
+            "lastName": "Ranya",
+            "image": "user2.svg",
+            "email": "bob@example.com"
+          },
+          "id": 1,
+          "name": "hh",
+          "description": "hh",
+          "isCompleted": "todo"
         },
         {
           "user": null,
+          "id": 1,
+          "name": "ww",
+          "description": "ww",
+          "isCompleted": "todo"
+        }
+      ],
+      "activitys": [
+        {
           "id": 6,
-          "name": null,
-          "description": "Description de la tache 4",
-          "isCompleted": "TaskStatus.pending"
+          "user": null,
+          "name": "tache",
+          "description": "Description de la tache 4"
+        },
+        {
+          "id": 1,
+          "user": null,
+          "name": "ww",
+          "description": "ww"
         }
       ]
     }
