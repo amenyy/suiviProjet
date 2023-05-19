@@ -3,6 +3,8 @@ import 'package:suiviprojet/User.dart';
 import 'package:suiviprojet/Sprint.dart';
 import 'package:suiviprojet/Task.dart';
 
+import 'Activity.dart';
+
 class Project {
   int id;
   String name;
@@ -11,6 +13,7 @@ class Project {
   List<Sprint> sprints;
   List<User> users;
   List<Task> tasks;
+  List<Activity> activitys;
 
   Project({
      this.id,
@@ -20,15 +23,18 @@ class Project {
      this.sprints,
      this.users,
      this.tasks,
+     this.activitys,
   });
   factory Project.fromJson(Map<String, dynamic> json) {
   List<dynamic> sprintsJson = json['sprints'];
   List<dynamic> usersJson = json['users'];
   List<dynamic> tasksJson = json['tasks'];
+    List<dynamic> activitysJson = json['activitys'];
 
   List<User> users = usersJson.map((users) => User.fromJson(users)).toList();
   List<Task> tasks = tasksJson.map((tasks) => Task.fromJson(tasks)).toList();
   List<Sprint> sprints = sprintsJson.map((sprints) => Sprint.fromJson(sprints)).toList();
+   List<Activity> activitys = activitysJson.map((activity) => Activity.fromJson(activity)).toList();
 
   if (json['users'] != null && json['users'] is List<dynamic>) {
     users = (json['users'] as List<dynamic>).map((userJson) {
@@ -56,6 +62,16 @@ class Project {
         throw Exception('Invalid task format: $taskJson');
       }
     }).toList();
+      if (json['activitys'] != null && json['activitys'] is List<dynamic>) {
+      activitys= (json['activitys'] as List<dynamic>).map((activitysJson) {
+        if (activitysJson is Map<String, dynamic>) {
+          return Activity.fromJson(activitysJson);
+        } else {
+          throw Exception('Invalid task format: $activitysJson');
+        }
+      }).toList();
+    }
+
   }
   return Project(
     id: json['id'],
@@ -65,6 +81,7 @@ class Project {
     sprints: sprints,
     users: users,
     tasks: tasks,
+    activitys: activitys,
   );
 }
 
@@ -77,6 +94,7 @@ class Project {
       'sprints': sprints.map((sprint) => sprint.toJson()).toList(),
       'users': users.map((user) => user.toJson()).toList(),
       'tasks': tasks.map((task) => task.toJson()).toList(),
+      'activitys': activitys.map((activity) => activity.toJson()).toList(),
     };
   }
 }

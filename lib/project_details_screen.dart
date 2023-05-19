@@ -10,6 +10,9 @@ import 'package:suiviprojet/UserService.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:intl/intl.dart';
 
+import 'Activity.dart';
+import 'recentactivity.dart';
+
 class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
 
@@ -26,7 +29,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   List<User> _projectUsers = [];
   final TextEditingController _NameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-
+  final TextEditingController _NametaskController = TextEditingController();
+  final TextEditingController _descriptiontaskController = TextEditingController();
+ String _statusTaskController = 'todo';
   @override
   void initState() {
     super.initState();
@@ -60,6 +65,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   }
 
   void _addUserToProject(User user) {
+    setState(() {
+      _selectedUsers.add(user);
+    });
+  }
+    void _addUserTotask(User user) {
     setState(() {
       _selectedUsers.add(user);
     });
@@ -109,7 +119,61 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       },
     );
   }
+/****usertask */
+void _opentaskUserSelectionDialog(Task task) {
+  String titlee;
+  if (  task.user == null  ){
+titlee = 'select user';
+  }else if  (  task.user != null  ){
+    titlee = 'modifier user';
+  }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+       
+         title:Text(titlee.toString()),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.project.users.length,
+              itemBuilder: (BuildContext context, int index) {
+                final user = widget.project.users[index];
+                final isSelected = _selectedUsers.contains(user);
 
+                return ListTile(
+                  title: Text('${user.firstName} ${user.lastName}'),
+                  trailing: IconButton(
+                    icon: Icon(isSelected
+                        ? Icons.check_box
+                        : Icons.check_box_outline_blank),
+                    onPressed: () {
+                      if (isSelected) {
+                        _removeUserFromProject(user);
+                      } else {
+                         setState(() {
+              task.name =  task.name;
+              task.description =  task.description ;
+              task.isCompleted = task.isCompleted;
+              task.user =user;
+            });
+
+           
+                        _saveP();
+                      }
+                      Navigator.pop(context); // Close the dialog
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+/****fin user task */
   Future<void> _saveProject() async {
     // Retrieve the existing project data
     final response = await http
@@ -598,12 +662,26 @@ void _showForm() {
                           children: [
                             ListTile(
                               title: Text('Task List'),
-                              trailing: IconButton(
+                              trailing:  SizedBox(
+                width: 100,
+                child: Row(
+                  children: [IconButton(
                                 icon: Icon(Icons.add),
                                 onPressed: () {
-                                  // Handle adding a new task
+                                 _showFormm();
+                                },
+                              ),IconButton(
+                                icon: Icon(Icons.history),
+                                onPressed: () {
+                                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => activityScreen(widget.project),
+                      ),
+                    );
                                 },
                               ),
+                  ],),),
                             ),
                             Expanded(
                               child: ListView.builder(
@@ -613,6 +691,60 @@ void _showForm() {
                                   return ListTile(
                                     title: Text(task.name),
                                     subtitle: Text(task.description),
+                                        trailing:   SizedBox(
+                width: 150,
+                child: Row(
+                  children: [               IconButton(
+  icon: const Icon(Icons.supervised_user_circle),
+  onPressed: () {
+    _opentaskUserSelectionDialog(task);
+  },
+),
+                    IconButton(
+  icon: const Icon(Icons.edit),
+  onPressed: () {
+    _editTask(task);
+  },
+),IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                        showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirm Delete'),
+                                    content: Text(
+                                        'Are you sure you want to delete this sprint?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                           setState(() {
+                        widget.project.tasks.remove(task);
+                      });
+                      _saveP();
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Delete'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                    
+                    },
+                  ),
+        ]),),
+          onTap: () {
+                  showdetails(task);
+                  },
                                   );
                                 },
                               ),
@@ -708,4 +840,172 @@ void _showForm() {
       ],
     ));
   }
+
+   void _showFormm() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Create New Task'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _NametaskController,
+              decoration: const InputDecoration(hintText: 'Title'),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _descriptiontaskController,
+              decoration: const InputDecoration(hintText: 'Description'),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              String name = _NametaskController.text;
+              String description = _descriptiontaskController.text;
+
+              Task newTask = Task(
+                id: 1, // Replace with the appropriate task ID
+                name: name,
+                description: description,
+                isCompleted:"todo",
+              );
+             Activity newActivity= Activity(
+                id: 1, // Replace with the appropriate task ID
+                name: name,
+                description: description,
+              );
+              setState(() {
+                widget.project.tasks.add(newTask);
+                widget.project.activitys.add(newActivity);
+              });
+              _saveP();
+
+              _NametaskController.text = '';
+              _descriptiontaskController.text = '';
+
+              Navigator.pop(context);
+            },
+            child: Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+  void showdetails(Task task) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Task Details'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          Text('name:'+' '+task.name),
+          Text('description:'+' '+task.description),
+          Text('status:'+'  '+task.isCompleted),
+           task.user!= null  ?  Text('name user: '+'  '+ task.user.firstName+' '+task.user.lastName): Text(''),
+         
+          ],
+        ),
+       
+      ),
+    );
+  }
+
+ /* Future<void> _saveProjectt() async {
+    String projectJson = jsonEncode(widget.project.toJson());
+
+    final putResponse = await http.put(
+      Uri.parse('http://localhost:3000/projects/${widget.project.id}'),
+      headers: {'Content-Type': 'application/json'},
+      body: projectJson,
+    );
+
+    if (putResponse.statusCode == 200) {
+      print('Project updated');
+    } else {
+      print('Failed to update project');
+    }
+  }*/
+ void _editTask(Task task) {
+  _NametaskController.text = task.name;
+  _descriptiontaskController.text = task.description;
+
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text('Edit Task'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: _NametaskController,
+            decoration: const InputDecoration(hintText: 'Title'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _descriptiontaskController,
+            decoration: const InputDecoration(hintText: 'Description'),
+          ),
+          CheckboxListTile(
+            title: Text('todo'),
+            value: _statusTaskController == 'todo',
+            onChanged: (value) {
+              setState(() {
+                _statusTaskController = 'todo';
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: Text('doing'),
+            value: _statusTaskController == 'doing',
+            onChanged: (value) {
+              setState(() {
+                _statusTaskController = 'doing';
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: Text('done'),
+            value: _statusTaskController == 'done',
+            onChanged: (value) {
+              setState(() {
+                _statusTaskController = 'done';
+              });
+            },
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            String name = _NametaskController.text;
+            String description = _descriptiontaskController.text;
+
+            setState(() {
+              task.name = name;
+              task.description = description;
+              task.isCompleted = _statusTaskController;
+            });
+
+            _saveP();
+
+            _NametaskController.text = '';
+            _descriptiontaskController.text = '';
+
+            Navigator.pop(context);
+          },
+          child: Text('Update'),
+        ),
+      ],
+    ),
+  );
+}
+
+
 }

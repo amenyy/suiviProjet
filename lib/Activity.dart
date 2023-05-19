@@ -1,49 +1,39 @@
 import 'package:suiviprojet/User.dart';
+import 'User.dart';
 
-class Task {
-  User user;
+class Activity {
   int id;
+  User user;
   String name;
   String description;
-  String isCompleted;
 
-  Task({
-     this.id,
+  Activity({
+    this.id,
+    this.user,
      this.name,
      this.description,
-     this.isCompleted,
-    this.user,
   });
 
-  factory Task.fromJson(Map<String, dynamic> json) {
+  factory Activity.fromJson(Map<String, dynamic> json) {
     User user;
     if (json['user'] != null) {
       user = User.fromJson(json['user']);
     }
 
-    return Task(
+    return Activity(
       id: json['id'],
+      user: user,
       name: json['name'],
       description: json['description'],
-      isCompleted: json['isCompleted'],
-      user: user,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id':id,
       'user': user != null ? user.toJson() : null,
-      'id': id,
       'name': name,
       'description': description,
-      'isCompleted': isCompleted,
     };
   }
 }
-
-enum TaskStatus {
-  todo,
-  doing,
-  done
-}
-
