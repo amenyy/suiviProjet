@@ -12,13 +12,13 @@ import 'dart:convert';
 
 class CurvedListItem extends StatelessWidget {
   const CurvedListItem({
-     this.title,
-     this.subtitle,
-     this.time,
-     this.color,
-     this.nextColor,
-     this.onTap,
-     this.onDelete,
+     required this.title,
+     required this.subtitle,
+     required this.time,
+     required this.color,
+    required  this.nextColor,
+     required this.onTap,
+     required this.onDelete,
   });
 
   final Widget title;

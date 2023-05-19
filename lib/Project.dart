@@ -13,13 +13,13 @@ class Project {
   List<Task> tasks;
 
   Project({
-     this.id,
-     this.name,
-     this.description,
-     this.createdAt,
-     this.sprints,
-     this.users,
-     this.tasks,
+     required this.id,
+     required this.name,
+    required  this.description,
+    required this.createdAt,
+    required this.sprints,
+    required this.users,
+     required this.tasks,
   });
   factory Project.fromJson(Map<String, dynamic> json) {
   List<dynamic> sprintsJson = json['sprints'];

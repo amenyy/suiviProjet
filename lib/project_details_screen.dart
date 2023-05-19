@@ -179,7 +179,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 void _showForm() {
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
-  String selectedStatus = 'Not Started';
+  String? selectedStatus = 'Not Started';
 
   showDialog(
     context: context,
@@ -253,15 +253,15 @@ void _showForm() {
             ),
           ),
           const SizedBox(height: 10),
-          DropdownButton<String>(
+          DropdownButton<String?>(
             value: selectedStatus,
-            onChanged: (newValue) {
+            onChanged: (String? newValue) {
               setState(() {
                 selectedStatus = newValue;
               });
             },
             items: ['Not Started', 'Started'].map((status) {
-              return DropdownMenuItem<String>(
+              return DropdownMenuItem<String?>(
                 value: status,
                 child: Text(status),
               );
@@ -281,7 +281,7 @@ void _showForm() {
               date_debut: selectedStartDate,
               date_fin: selectedEndDate,
               description: description,
-              status: selectedStatus,
+              status: selectedStatus ?? 'Not Started', // Use null-aware operator
               tasks: [], // Initialize the tasks list
             );
 
@@ -302,140 +302,141 @@ void _showForm() {
   );
 }
 
+
  void editSprint(Sprint sprint) {
-    TextEditingController _nameController =
-        TextEditingController(text: sprint.nom);
-    TextEditingController _descriptionController =
-        TextEditingController(text: sprint.description);
-    DateTime selectedStartDate = sprint.date_debut;
-    DateTime selectedEndDate = sprint.date_fin;
-    String selectedStatus = sprint.status;
+  TextEditingController _nameController = TextEditingController(text: sprint.nom);
+  TextEditingController _descriptionController = TextEditingController(text: sprint.description);
+  DateTime selectedStartDate = sprint.date_debut;
+  DateTime selectedEndDate = sprint.date_fin;
+  String selectedStatus = sprint.status ?? ''; // Provide a default value if sprint.status is null
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Edit Sprint'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(hintText: 'Title'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(hintText: 'Description'),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: selectedStartDate,
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2100),
-                ).then((selectedDate) {
-                  if (selectedDate != null) {
-                    setState(() {
-                      selectedStartDate = selectedDate;
-                    });
-                  }
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  'Start Date: ${DateFormat.yMMMMd().format(selectedStartDate)}',
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            InkWell(
-              onTap: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: selectedEndDate,
-                  firstDate: DateTime(2022),
-                  lastDate: DateTime(2100),
-                ).then((selectedDate) {
-                  if (selectedDate != null) {
-                    setState(() {
-                      selectedEndDate = selectedDate;
-                    });
-                  }
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  'End Date: ${DateFormat.yMMMMd().format(selectedEndDate)}',
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            DropdownButton<String>(
-              value: selectedStatus,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedStatus = newValue;
-                });
-              },
-              items: [
-                DropdownMenuItem<String>(
-                  value: 'notstarted',
-                  child: Text('Not Started'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'started',
-                  child: Text('Started'),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              String title = _nameController.text;
-              String description = _descriptionController.text;
-
-              Sprint updatedSprint = Sprint(
-                id: sprint.id,
-                nom: title,
-                date_debut: selectedStartDate,
-                date_fin: selectedEndDate,
-                description: description,
-                status: selectedStatus,
-                tasks: sprint.tasks,
-              );
-
-              setState(() {
-                // Update the sprint in the project's list
-                final index = widget.project.sprints.indexOf(sprint);
-                if (index != -1) {
-                  widget.project.sprints[index] = updatedSprint;
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text('Edit Sprint'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: const InputDecoration(hintText: 'Title'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _descriptionController,
+            decoration: const InputDecoration(hintText: 'Description'),
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              showDatePicker(
+                context: context,
+                initialDate: selectedStartDate,
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2100),
+              ).then((selectedDate) {
+                if (selectedDate != null) {
+                  setState(() {
+                    selectedStartDate = selectedDate;
+                  });
                 }
               });
-              _saveP();
-
-              Navigator.pop(context);
             },
-            child: Text('Update'),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'Start Date: ${DateFormat.yMMMMd().format(selectedStartDate)}',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              showDatePicker(
+                context: context,
+                initialDate: selectedEndDate,
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2100),
+              ).then((selectedDate) {
+                if (selectedDate != null) {
+                  setState(() {
+                    selectedEndDate = selectedDate;
+                  });
+                }
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'End Date: ${DateFormat.yMMMMd().format(selectedEndDate)}',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          DropdownButton<String>(
+            value: selectedStatus,
+            onChanged: (newValue) {
+              setState(() {
+                selectedStatus = newValue ?? ''; // Provide a default value if newValue is null
+              });
+            },
+            items: [
+              DropdownMenuItem<String>(
+                value: 'notstarted',
+                child: Text('Not Started'),
+              ),
+              DropdownMenuItem<String>(
+                value: 'started',
+                child: Text('Started'),
+              ),
+            ],
           ),
         ],
       ),
-    );
-  }
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            String title = _nameController.text;
+            String description = _descriptionController.text;
+
+            Sprint updatedSprint = Sprint(
+              id: sprint.id,
+              nom: title,
+              date_debut: selectedStartDate,
+              date_fin: selectedEndDate,
+              description: description,
+              status: selectedStatus,
+              tasks: sprint.tasks,
+            );
+
+            setState(() {
+              // Update the sprint in the project's list
+              final index = widget.project.sprints.indexOf(sprint);
+              if (index != -1) {
+                widget.project.sprints[index] = updatedSprint;
+              }
+            });
+            _saveP();
+
+            Navigator.pop(context);
+          },
+          child: Text('Update'),
+        ),
+      ],
+    ),
+  );
+}
+
+
  
   @override
   Widget build(BuildContext context) {

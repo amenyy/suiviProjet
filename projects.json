@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Projet 1",
       "description": "Description du projet 1",
-      "createdAt": "2023-05-19T15:20:37.014",
+      "createdAt": "2023-05-19T20:09:15.771",
       "sprints": [
         {
           "id": 2,
@@ -17,14 +17,14 @@
             {
               "user": null,
               "id": 3,
-              "name": null,
+              "name": "null",
               "description": "Description de la tache 3",
               "isCompleted": "TaskStatus.pending"
             },
             {
               "user": null,
               "id": 4,
-              "name": null,
+              "name": "null",
               "description": "Description de la tache 4",
               "isCompleted": "TaskStatus.pending"
             }
@@ -36,6 +36,15 @@
           "date_debut": "2023-05-19T15:19:43.630",
           "date_fin": "2023-05-19T15:19:43.630",
           "description": "hhhh",
+          "status": "Not Started",
+          "tasks": []
+        },
+        {
+          "id": 1,
+          "nom": "sprint hedha test",
+          "date_debut": "2023-05-19T20:10:12.419",
+          "date_fin": "2023-05-19T20:10:12.419",
+          "description": "test test",
           "status": "Not Started",
           "tasks": []
         }
@@ -74,15 +83,8 @@
         {
           "user": null,
           "id": 5,
-          "name": null,
+          "name": "null",
           "description": "Description de la tache 3",
-          "isCompleted": "TaskStatus.pending"
-        },
-        {
-          "user": null,
-          "id": 6,
-          "name": null,
-          "description": "Description de la tache 4",
           "isCompleted": "TaskStatus.pending"
         }
       ]

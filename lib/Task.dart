@@ -1,38 +1,39 @@
 import 'package:suiviprojet/User.dart';
 
 class Task {
-  User user;
+  User? user; // Make user nullable by adding '?'
   int id;
   String name;
   String description;
   TaskStatus isCompleted;
 
   Task({
-     this.id,
-     this.name,
-     this.description,
-     this.isCompleted,
-    this.user,
+     required this.id,
+     required this.name,
+     required this.description,
+     required this.isCompleted,
+    this.user, // Update user to be nullable
   });
 
-  factory Task.fromJson(Map<String, dynamic> json) {
-    User user;
-    if (json['user'] != null) {
-      user = User.fromJson(json['user']);
-    }
-
-    return Task(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      isCompleted: TaskStatusExtension.fromString(json['isCompleted']),
-      user: user,
-    );
+ factory Task.fromJson(Map<String, dynamic> json) {
+  User? user; // Make user nullable by adding '?'
+  if (json['user'] != null) {
+    user = User.fromJson(json['user']);
   }
+
+  return Task(
+    id: json['id'],
+    name: json['name'],
+    description: json['description'],
+    isCompleted: TaskStatusExtension.fromString(json['isCompleted']),
+    user: user,
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {
-      'user': user != null ? user.toJson() : null,
+      'user': user != null ? user!.toJson() : null, // Add null check using '!'
       'id': id,
       'name': name,
       'description': description,

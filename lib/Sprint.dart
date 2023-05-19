@@ -10,13 +10,13 @@ class Sprint {
   List<Task> tasks;
 
   Sprint({
-     this.id,
-     this.nom,
-     this.date_debut,
-     this.date_fin,
-     this.description,
-     this.status,
-     this.tasks,
+    required this.id,
+    required this.nom,
+     required this.date_debut,
+     required this.date_fin,
+     required this.description,
+    required this.status,
+    required this.tasks,
   });
 
   factory Sprint.fromJson(Map<String, dynamic> json) {
