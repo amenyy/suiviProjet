@@ -821,7 +821,14 @@ void _showForm() {
                             },
                             child: Icon(Icons.delete, color: Colors.white),
                           ),
-                        ])
+                        ]),onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SprintDetailsScreen(sprint),
+                ),
+              );
+            },
                         
                                   );
                                 },

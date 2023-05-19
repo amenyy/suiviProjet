@@ -17,7 +17,7 @@
             {
               "user": null,
               "id": 3,
-              "name": null,
+              "name": "taske",
               "description": "Description de la tache 3",
               "isCompleted": "TaskStatus.pending"
             },
