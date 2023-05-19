@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:suiviprojet/BacklogButton.dart';
@@ -10,6 +7,8 @@ import 'package:suiviprojet/Sprint.dart';
 import 'package:suiviprojet/Task.dart';
 import 'package:suiviprojet/User.dart';
 import 'package:suiviprojet/UserService.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:intl/intl.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   final Project project;
@@ -25,11 +24,28 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   List<User> _selectedUsers = [];
   List<User> _globalUsers = [];
   List<User> _projectUsers = [];
+  final TextEditingController _NameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _loadGlobalUsers();
+  }
+  Future<void> _saveP() async {
+    String projectJson = jsonEncode(widget.project.toJson());
+
+    final putResponse = await http.put(
+      Uri.parse('http://localhost:3000/projects/${widget.project.id}'),
+      headers: {'Content-Type': 'application/json'},
+      body: projectJson,
+    );
+
+    if (putResponse.statusCode == 200) {
+      print('Project updated');
+    } else {
+      print('Failed to update project');
+    }
   }
 
   Future<void> _loadGlobalUsers() async {
@@ -96,8 +112,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
   Future<void> _saveProject() async {
     // Retrieve the existing project data
-    final response = await http.get(
-        Uri.parse('http://192.168.1.27:3000/projects/${widget.project.id}'));
+    final response = await http
+        .get(Uri.parse('http://localhost:3000/projects/${widget.project.id}'));
 
     if (response.statusCode == 200) {
       // Parse the response body
@@ -142,7 +158,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
       // Send the updated project data to the JSON server
       final putResponse = await http.put(
-        Uri.parse('http://192.168.1.27:3000/projects/${widget.project.id}'),
+        Uri.parse('http://localhost:3000/projects/${widget.project.id}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(updatedProjectData),
       );
@@ -160,6 +176,267 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     }
   }
 
+void _showForm() {
+  DateTime selectedStartDate = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
+  String selectedStatus = 'Not Started';
+
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: Text('Create New Sprint'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+            controller: _NameController,
+            decoration: const InputDecoration(hintText: 'Title'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _descriptionController,
+            decoration: const InputDecoration(hintText: 'Description'),
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              showDatePicker(
+                context: context,
+                initialDate: selectedStartDate,
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2100),
+              ).then((selectedDate) {
+                if (selectedDate != null) {
+                  setState(() {
+                    selectedStartDate = selectedDate;
+                  });
+                }
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'Start Date: ${DateFormat.yMMMMd().format(selectedStartDate)}',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () {
+              showDatePicker(
+                context: context,
+                initialDate: selectedEndDate,
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2100),
+              ).then((selectedDate) {
+                if (selectedDate != null) {
+                  setState(() {
+                    selectedEndDate = selectedDate;
+                  });
+                }
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                'End Date: ${DateFormat.yMMMMd().format(selectedEndDate)}',
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          DropdownButton<String>(
+            value: selectedStatus,
+            onChanged: (newValue) {
+              setState(() {
+                selectedStatus = newValue;
+              });
+            },
+            items: ['Not Started', 'Started'].map((status) {
+              return DropdownMenuItem<String>(
+                value: status,
+                child: Text(status),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            String title = _NameController.text;
+            String description = _descriptionController.text;
+
+            Sprint newSprint = Sprint(
+              id: 1, // Replace with the appropriate sprint ID
+              nom: title,
+              date_debut: selectedStartDate,
+              date_fin: selectedEndDate,
+              description: description,
+              status: selectedStatus,
+              tasks: [], // Initialize the tasks list
+            );
+
+            setState(() {
+              widget.project.sprints.add(newSprint);
+            });
+            _saveP();
+
+            _NameController.text = '';
+            _descriptionController.text = '';
+
+            Navigator.pop(context);
+          },
+          child: Text('Create'),
+        ),
+      ],
+    ),
+  );
+}
+
+ void editSprint(Sprint sprint) {
+    TextEditingController _nameController =
+        TextEditingController(text: sprint.nom);
+    TextEditingController _descriptionController =
+        TextEditingController(text: sprint.description);
+    DateTime selectedStartDate = sprint.date_debut;
+    DateTime selectedEndDate = sprint.date_fin;
+    String selectedStatus = sprint.status;
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Edit Sprint'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(hintText: 'Title'),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(hintText: 'Description'),
+            ),
+            const SizedBox(height: 10),
+            InkWell(
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: selectedStartDate,
+                  firstDate: DateTime(2022),
+                  lastDate: DateTime(2100),
+                ).then((selectedDate) {
+                  if (selectedDate != null) {
+                    setState(() {
+                      selectedStartDate = selectedDate;
+                    });
+                  }
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'Start Date: ${DateFormat.yMMMMd().format(selectedStartDate)}',
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            InkWell(
+              onTap: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: selectedEndDate,
+                  firstDate: DateTime(2022),
+                  lastDate: DateTime(2100),
+                ).then((selectedDate) {
+                  if (selectedDate != null) {
+                    setState(() {
+                      selectedEndDate = selectedDate;
+                    });
+                  }
+                });
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'End Date: ${DateFormat.yMMMMd().format(selectedEndDate)}',
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            DropdownButton<String>(
+              value: selectedStatus,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedStatus = newValue;
+                });
+              },
+              items: [
+                DropdownMenuItem<String>(
+                  value: 'notstarted',
+                  child: Text('Not Started'),
+                ),
+                DropdownMenuItem<String>(
+                  value: 'started',
+                  child: Text('Started'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              String title = _nameController.text;
+              String description = _descriptionController.text;
+
+              Sprint updatedSprint = Sprint(
+                id: sprint.id,
+                nom: title,
+                date_debut: selectedStartDate,
+                date_fin: selectedEndDate,
+                description: description,
+                status: selectedStatus,
+                tasks: sprint.tasks,
+              );
+
+              setState(() {
+                // Update the sprint in the project's list
+                final index = widget.project.sprints.indexOf(sprint);
+                if (index != -1) {
+                  widget.project.sprints[index] = updatedSprint;
+                }
+              });
+              _saveP();
+
+              Navigator.pop(context);
+            },
+            child: Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -353,8 +630,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                               trailing: IconButton(
                                 icon: Icon(Icons.add),
                                 onPressed: () {
-                                  // Handle adding a new sprint
+                                  _showForm();// Handle adding a new sprint
                                 },
+                                
                               ),
                             ),
                             Expanded(
@@ -363,42 +641,60 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 itemBuilder: (context, index) {
                                   Sprint sprint = widget.project.sprints[index];
                                   return ListTile(
-                                    title: Text(sprint.name),
-                                    subtitle: Text(sprint.endDate.toString()),
+                                    title: Text(sprint.nom),
+                                    subtitle: Text(sprint.status),
+                                    trailing:
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              editSprint(sprint);
+                            },
+                            icon: Icon(Icons.edit),
+                            label: Text('Edit'),
+                          ),
+                          SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Confirm Delete'),
+                                    content: Text(
+                                        'Are you sure you want to delete this sprint?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.project.sprints
+                                                .remove(sprint);
+                                          });
+                                          _saveP();
+                                          // Close the dialog
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Delete'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                        ])
+                        
                                   );
                                 },
                               ),
                             ),
-
-                            /*  SizedBox(height: 16),
-                  Text(
-                    'Selected Users:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  _selectedUsers.isNotEmpty
-                      ? Column(
-                          children: _selectedUsers.map((user) {
-                            return ListTile(
-                              title: Text('${user.firstName} ${user.lastName}'),
-                              trailing: IconButton(
-                                icon: Icon(Icons.remove_circle),
-                                onPressed: () {
-                                  _removeUserFromProject(user);
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        )
-                      : Text(
-                          'No users selected.',
-                          style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),*/
                           ],
                         ),
                       ),

@@ -5,7 +5,7 @@ import 'package:suiviprojet/Project.dart';
 import 'package:suiviprojet/User.dart';
 
 class ProjectService {
-  static const API_URL = 'http://192.168.1.27:3000/projects';
+  static const API_URL = 'http://localhost:3000/projects';
 
   Future<List<Project>> fetchProjects() async {
     final response = await http.get(Uri.parse(API_URL));
@@ -30,6 +30,7 @@ class ProjectService {
       throw Exception('Failed to fetch projects');
     }
   }
+
 
   Future<void> addProject(Project project) async {
     final projectJson = {

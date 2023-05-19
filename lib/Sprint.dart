@@ -1,47 +1,45 @@
 import 'package:suiviprojet/Task.dart';
 
 class Sprint {
-  final String id;
-  final String name;
-  final DateTime startDate;
-  final DateTime endDate;
-  final List<Task> tasks;
+  int id;
+  String nom;
+  DateTime date_debut;
+  DateTime date_fin;
+  String description;
+  String status;
+  List<Task> tasks;
 
   Sprint({
-    required this.id,
-    required this.name,
-    required this.startDate,
-    required this.endDate,
-    required this.tasks,
+     this.id,
+     this.nom,
+     this.date_debut,
+     this.date_fin,
+     this.description,
+     this.status,
+     this.tasks,
   });
 
   factory Sprint.fromJson(Map<String, dynamic> json) {
     return Sprint(
-      id: json['id'].toString(),
-      name: json['nom'] ?? 'No Name',
-      startDate: DateTime.parse(json['date_debut']),
-      endDate: DateTime.parse(json['date_fin']),
-      tasks: (json['taches'] as List)
-          .map((taskJson) => Task.fromJson(taskJson))
-          .toList(),
+      id: json['id'],
+      nom: json['nom'],
+      date_debut: DateTime.parse(json['date_debut']),
+      date_fin: DateTime.parse(json['date_fin']),
+      description: json['description'],
+      status: json['status'],
+      tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
+      'nom': nom,
+      'date_debut': date_debut.toIso8601String(),
+      'date_fin': date_fin.toIso8601String(),
+      'description': description,
+      'status': status,
       'tasks': tasks.map((task) => task.toJson()).toList(),
     };
-  }
-
-  void addTask(Task task) {
-    tasks.add(task);
-  }
-
-  void removeTask(Task task) {
-    tasks.remove(task);
   }
 }

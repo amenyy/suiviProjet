@@ -6,11 +6,11 @@ class User {
   String email;
 
   User({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.image,
-    required this.email,
+     this.id,
+     this.firstName,
+     this.lastName,
+     this.image,
+     this.email,
   });
 
   Map<String, dynamic> toJson() {

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:suiviprojet/Project.dart';
 import 'package:suiviprojet/project_details_screen.dart';
 import 'package:suiviprojet/project_service.dart';
@@ -11,13 +12,13 @@ import 'dart:convert';
 
 class CurvedListItem extends StatelessWidget {
   const CurvedListItem({
-    required this.title,
-    required this.subtitle,
-    required this.time,
-    required this.color,
-    required this.nextColor,
-    required this.onTap,
-    required this.onDelete,
+     this.title,
+     this.subtitle,
+     this.time,
+     this.color,
+     this.nextColor,
+     this.onTap,
+     this.onDelete,
   });
 
   final Widget title;
@@ -25,8 +26,8 @@ class CurvedListItem extends StatelessWidget {
   final String time;
   final Color color;
   final Color nextColor;
-  final VoidCallback? onTap;
-  final VoidCallback? onDelete;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -130,17 +131,17 @@ class _ProjectListState extends State<ProjectList> {
 
   //add project func
   void _addProject() async {
+       // DateTime selectedEndDate = .createdAt;
+
     final projectName = _projectNameController.text;
     final description = _descriptionController.text;
-
-    // final usersJson = await _loadUsersFromJsonFile('users.json');
-    // final users = usersJson.map((userJson) => User.fromJson(userJson)).toList();
 
     final project = Project(
         id: _nextProjectId = random.nextInt(100),
         name: projectName,
         description: description,
         createdAt: DateTime.now(),
+
         //users: users,
         users: [],
         sprints: [],
@@ -153,7 +154,8 @@ class _ProjectListState extends State<ProjectList> {
       map['id'] = project.id;
       map['name'] = project.name;
       map['description'] = project.description;
-      map['createdAt'] = project.createdAt.toString();
+          map['createdAt'] = project.createdAt.toString();
+
       map['users'] = project.users;
 
       _projectNameController.clear();
@@ -238,7 +240,7 @@ class _ProjectListState extends State<ProjectList> {
   }
 
   void fetchProjects() async {
-    var url = 'http://192.168.1.27:3000/projects?q=$_searchQuery';
+    var url = 'http://localhost:3000/projects?q=$_searchQuery';
 
     try {
       var response = await http.get(Uri.parse(url));
@@ -344,6 +346,7 @@ class _ProjectListState extends State<ProjectList> {
               ],
             ),
           ),
+        
 
           Positioned(
             top: MediaQuery.of(context).size.height * 0.33,
