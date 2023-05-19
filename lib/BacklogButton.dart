@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BacklogButton extends StatefulWidget {
   final VoidCallback onPressed;
 
-  BacklogButton({required this.onPressed});
+  BacklogButton({ this.onPressed});
 
   @override
   _BacklogButtonState createState() => _BacklogButtonState();
@@ -11,13 +11,12 @@ class BacklogButton extends StatefulWidget {
 
 class _BacklogButtonState extends State<BacklogButton>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-  late final Animation<double> _scaleAnimation;
+  AnimationController _animationController;
+  Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),

@@ -4,115 +4,63 @@
       "id": 1,
       "name": "Projet 1",
       "description": "Description du projet 1",
-      "date_creation": "2022-01-01",
-      "users": [
-        {
-          "id": 7,
-          "firstName": "Ranya",
-          "lastName": "Ranya",
-          "image": "user2.svg",
-          "email": "bob@example.com"
-        },
-        {
-          "id": 6,
-          "firstName": "Ameny",
-          "lastName": "Ameny",
-          "image": "user1.svg",
-          "email": "alice@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
-        },
-        {
-          "id": 9,
-          "firstName": "Alaa",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob2@example.com"
-        }
-      ],
+      "createdAt": "2023-05-19T15:20:37.014",
       "sprints": [
         {
-          "id": 1,
-          "nom": "Sprint 1",
-          "date_debut": "2022-01-01",
-          "date_fin": "2022-01-07",
-          "status": "started",
-          "taches": [
-            {
-              "id": 1,
-              "nom": "Tache 1",
-              "description": "Description de la tache 1",
-              "isCompleted": "pending"
-            },
-            {
-              "id": 2,
-              "nom": "Tache 2",
-              "description": "Description de la tache 2",
-              "isCompleted": "pending"
-            }
-          ]
-        },
-        {
           "id": 2,
-          "nom": "Sprint 2",
-          "date_debut": "2022-01-08",
-          "date_fin": "2022-01-14",
+          "nom": "Sprint 1",
+          "date_debut": "2023-05-15T00:00:00.000",
+          "date_fin": "2023-05-15T00:00:00.000",
+          "description": "Description du sprint 2",
           "status": "started",
-          "taches": [
+          "tasks": [
             {
+              "user": null,
               "id": 3,
-              "nom": "Tache 3",
+              "name": null,
               "description": "Description de la tache 3",
-              "isCompleted": "pending"
+              "isCompleted": "TaskStatus.pending"
             },
             {
+              "user": null,
               "id": 4,
-              "nom": "Tache 4",
+              "name": null,
               "description": "Description de la tache 4",
-              "isCompleted": "pending"
+              "isCompleted": "TaskStatus.pending"
             }
           ]
+        },
+        {
+          "id": 1,
+          "nom": "test",
+          "date_debut": "2023-05-19T15:19:43.630",
+          "date_fin": "2023-05-19T15:19:43.630",
+          "description": "hhhh",
+          "status": "Not Started",
+          "tasks": []
         }
       ],
-      "taches": [
+      "users": [
         {
-          "id": 5,
-          "nom": "Tache 3",
-          "description": "Description de la tache 3",
-          "isCompleted": "pending"
+          "id": 7,
+          "firstName": "Ranya",
+          "lastName": "Ranya",
+          "image": "user2.svg",
+          "email": "bob@example.com"
         },
         {
           "id": 6,
-          "nom": "Tache 4",
-          "description": "Description de la tache 4",
-          "isCompleted": "pending"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Projet 2",
-      "description": "Description du projet 2",
-      "date_creation": "2022-01-01",
-      "users": [
-        {
-          "id": 1,
-          "firstName": "Alice",
-          "lastName": "Smith",
-          "image": "alice_image.jpg",
+          "firstName": "Ameny",
+          "lastName": "Ameny",
+          "image": "user1.svg",
           "email": "alice@example.com"
         },
         {
-          "id": 2,
-          "firstName": "Bob",
+          "id": 8,
+          "firstName": "Ahmed",
           "lastName": "Johnson",
-          "image": "alice_image.jpg",
-          "email": "bob@example.com"
+          "image": "user2.svg",
+          "email": "bob1@example.com"
         },
         {
           "id": 9,
@@ -120,113 +68,22 @@
           "lastName": "Johnson",
           "image": "user2.svg",
           "email": "bob2@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
-        },
-        {
-          "id": 7,
-          "firstName": "Ranya",
-          "lastName": "Ranya",
-          "image": "user2.svg",
-          "email": "bob@example.com"
         }
       ],
-      "sprints": [
+      "tasks": [
         {
-          "id": 4,
-          "nom": "Sprint 1",
-          "date_debut": "2022-01-01",
-          "date_fin": "2022-01-07",
-          "status": "started",
-          "taches": [
-            {
-              "id": 5,
-              "nom": "Tache 1",
-              "description": "Description de la tache 1",
-              "isCompleted": "pending"
-            },
-            {
-              "id": 8,
-              "nom": "Tache 2",
-              "description": "Description de la tache 2",
-              "isCompleted": "pending"
-            }
-          ]
-        },
-        {
+          "user": null,
           "id": 5,
-          "nom": "Sprint 2",
-          "date_debut": "2022-01-08",
-          "date_fin": "2022-01-14",
-          "taches": [
-            {
-              "id": 9,
-              "nom": "Tache 3",
-              "description": "Description de la tache 3",
-              "isCompleted": "pending"
-            },
-            {
-              "id": 10,
-              "nom": "Tache 4",
-              "description": "Description de la tache 4",
-              "isCompleted": "pending"
-            }
-          ]
-        }
-      ],
-      "taches": [
-        {
-          "id": 15,
-          "nom": "Tache 3",
+          "name": null,
           "description": "Description de la tache 3",
-          "isCompleted": "pending"
+          "isCompleted": "TaskStatus.pending"
         },
         {
-          "id": 16,
-          "nom": "Tache 4",
+          "user": null,
+          "id": 6,
+          "name": null,
           "description": "Description de la tache 4",
-          "isCompleted": "pending"
-        }
-      ]
-    },
-    {
-      "id": 84,
-      "name": "suivi projet",
-      "description": "application de suivi des projet ",
-      "createdAt": "2023-05-17T12:49:02.019338",
-      "users": [
-        {
-          "id": 6,
-          "firstName": "Ameny",
-          "lastName": "Ameny",
-          "image": "user1.svg",
-          "email": "alice@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
-        },
-        {
-          "id": 6,
-          "firstName": "Ameny",
-          "lastName": "Ameny",
-          "image": "user1.svg",
-          "email": "alice@example.com"
-        },
-        {
-          "id": 8,
-          "firstName": "Ahmed",
-          "lastName": "Johnson",
-          "image": "user2.svg",
-          "email": "bob1@example.com"
+          "isCompleted": "TaskStatus.pending"
         }
       ]
     }

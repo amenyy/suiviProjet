@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static const API_URL = 'http://192.168.1.27:3000/users';
+  static const API_URL = 'http://localhost:3000/users';
 
   Future<List<User>> fetchUsers() async {
     final response = await http.get(Uri.parse(API_URL));
